@@ -1,7 +1,11 @@
 import time
-import requests
+
 import lxml.html
+import openpyxl
+import requests
+from openpyxl import workbook
 from selenium import webdriver
+from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.keys import Keys
 
 
@@ -23,7 +27,8 @@ class HelsiParser:
     def to_declarations(self):
 
         driver = self.driver
-        #driver = webdriver.Chrome()
+
+        # driver = webdriver.Chrome()
         driver.implicitly_wait(10)
 
         driver.get("https://reform.helsi.me/")
@@ -32,35 +37,50 @@ class HelsiParser:
         driver.find_element_by_xpath(".//a[@href='#login-modal']").click()
         driver.find_element_by_xpath(".//input[@id='user.email']").send_keys("rovenska10@bigmir.net",
                                                                              Keys.ENTER)
-        #auth page
+        # auth page
         el = driver.find_element_by_name("password")
         el.send_keys("140290Rovenska1")
         el.submit()
 
-        #continue page
+        # continue page
         el = driver.find_element_by_xpath(".//button[@type='button']")
         el.click()
 
-        #declaration page
+        # declaration page
         el = driver.find_element_by_xpath(".//a[@href='/declarations/my/signed']")
         el.click()
 
-        #go to last page
+        # go to last page
         driver.find_element_by_xpath(".//a[@href='?page_number=60']").click()
 
-        # TODO add checking
-        if 1==1:
-            next_page(driver)
+        try:
+            driver.find_element_by_link_text("chevron_left").click()
 
-def next_page(driver):
-    driver.find_element_by_link_text("chevron_left").click()
-
-def parse(self):
-    pass
+            find_name(driver)
+            find_bday(driver)
 
 
-def run(self):
-    pass
+        except WebDriverException:
+            print("Element is not clickable")
+
+
+def find_name(driver):
+    names = driver.find_elements_by_xpath(".//div[@class='declaration-td name']")
+
+    names.reverse()
+    names = [i.text for i in names]
+    print(*names[:len(names) - 1])
+
+def find_bday(driver):
+    dates = driver.find_elements_by_xpath(".//div[@class='declaration-td birthday-date']")
+
+    dates.reverse()
+    dates = [i.text for i in dates]
+    print(*dates[:len(dates)])
+
+def excel_operations():
+    wb = workbook.Workbook()
+    ws = wb.active
 
 
 if __name__ == "__main__":
@@ -68,3 +88,10 @@ if __name__ == "__main__":
 
     parser.to_declarations()
 
+    # elements = ["Petya", "Masha", "Kolya", "Nadya"]
+    # elements.reverse()
+    # for el in elements:
+    #     if elements.index(el) < 3:
+    #         print(el)
+
+    #excel_operations()
