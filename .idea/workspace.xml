@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="b21f3dbc-f862-44cd-b893-f58c66299b85" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/venv/HelsiParser.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/HelsiParser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/venv/geckodriver.log" beforeDir="false" afterPath="$PROJECT_DIR$/venv/geckodriver.log" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -31,10 +30,9 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/venv/HelsiParser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="114">
-              <caret line="99" column="105" lean-forward="true" selection-start-line="99" selection-start-column="105" selection-end-line="99" selection-end-column="105" />
+            <state relative-caret-position="306">
+              <caret line="87" column="33" selection-start-line="87" selection-start-column="33" selection-end-line="87" selection-end-column="33" />
               <folding>
-                <element signature="e#0#11#0" expanded="true" />
                 <element signature="e#2725#2907#0" />
                 <element signature="e#2285#2332#0" />
                 <element signature="e#2437#2441#0" />
@@ -56,6 +54,7 @@
     <findStrings>
       <find>find_name</find>
       <find>find_bday</find>
+      <find>EC</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -224,19 +223,20 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="24" width="1366" height="744" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.24944155" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" weight="0.1764706" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32901135" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4981385" weight="0.94975686" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4981385" weight="0.35656402" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.4981385" weight="0.3987034" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.4996277" weight="0.32901135" />
       <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.4996277" weight="0.32868218" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="8" sideWeight="0.4981385" visible="true" weight="0.36142626" />
+      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.4981385" weight="0.36142626" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5018615" side_tool="true" weight="0.3987034" />
       <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.4988831" weight="0.32901135" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -338,10 +338,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/venv/HelsiParser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="114">
-          <caret line="99" column="105" lean-forward="true" selection-start-line="99" selection-start-column="105" selection-end-line="99" selection-end-column="105" />
+        <state relative-caret-position="306">
+          <caret line="87" column="33" selection-start-line="87" selection-start-column="33" selection-end-line="87" selection-end-column="33" />
           <folding>
-            <element signature="e#0#11#0" expanded="true" />
             <element signature="e#2725#2907#0" />
             <element signature="e#2285#2332#0" />
             <element signature="e#2437#2441#0" />
