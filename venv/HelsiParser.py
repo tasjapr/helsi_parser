@@ -72,6 +72,9 @@ def update_names(driver):
 
 
 def cp_page(driver):
+    wb = workbook.Workbook()
+    ws = wb.active
+
     dates = driver.find_elements_by_xpath(".//div[@class='declaration-td birthday-date']")
     dates.reverse()
     dates = [i.text for i in dates]
@@ -80,9 +83,8 @@ def cp_page(driver):
     for i in range(20):
         names = update_names(driver)
 
-        person = [""] * 6
-        person[0] = i
-        person[1] = names[i].text
+        person = [""] * 5
+        person[0] = names[i].text
         person[2] = dates[i]
 
         # Don't change this line!
@@ -91,25 +93,23 @@ def cp_page(driver):
         # Yep, it`s stupid, but otherwise the db of MoH is breaking down
         time.sleep(5)
 
-        person[3] = driver.find_element_by_id("person.gender").get_attribute("value")
-        person[4] = driver.find_element_by_id("person.phones.0.number").get_attribute("value")
+        person[1] = driver.find_element_by_id("person.gender").get_attribute("value")
+        person[3] = driver.find_element_by_id("person.phones.0.number").get_attribute("value")
 
         if driver.find_element_by_id("person.addresses.0.apartment").get_attribute("value") == ' ':
-            person[5] = driver.find_element_by_id("person.addresses.0.street").get_attribute("value") + ' ' \
+            person[4] = driver.find_element_by_id("person.addresses.0.street").get_attribute("value") + ' ' \
                         + driver.find_element_by_id("person.addresses.0.building").get_attribute("value")
         else:
-            person[5] = driver.find_element_by_id("person.addresses.0.street").get_attribute("value") + ' ' \
+            person[4] = driver.find_element_by_id("person.addresses.0.street").get_attribute("value") + ' ' \
                         + driver.find_element_by_id("person.addresses.0.building").get_attribute("value") + '-' \
                         + driver.find_element_by_id("person.addresses.0.apartment").get_attribute("value")
 
         print(*person)
+        ws.append(person)
+        wb.save('decl.xlsx')
+
         driver.back()
     print("#######################")
-
-
-def excel_operations():
-    wb = workbook.Workbook()
-    ws = wb.active
 
 
 if __name__ == "__main__":
@@ -117,5 +117,3 @@ if __name__ == "__main__":
 
     parser.to_declarations()
     parser.parse()
-
-# excel_operations()
