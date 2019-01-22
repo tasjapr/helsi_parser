@@ -3,10 +3,12 @@ import time
 import lxml.html
 import openpyxl
 import requests
+import array
 from openpyxl import workbook
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 class HelsiParser:
@@ -26,72 +28,107 @@ class HelsiParser:
 
     def to_declarations(self):
 
-        driver = self.driver
+        self.driver.implicitly_wait(10)
 
-        # driver = webdriver.Chrome()
-        driver.implicitly_wait(10)
-
-        driver.get("https://reform.helsi.me/")
+        self.driver.get("https://reform.helsi.me/")
 
         # main page
-        driver.find_element_by_xpath(".//a[@href='#login-modal']").click()
-        driver.find_element_by_xpath(".//input[@id='user.email']").send_keys("rovenska10@bigmir.net",
-                                                                             Keys.ENTER)
+
+        self.driver.find_element_by_xpath(".//a[@href='#login-modal']").click()
+        self.driver.find_element_by_xpath(".//input[@id='user.email']").send_keys("rovenska10@bigmir.net",
+                                                                                  Keys.ENTER)
         # auth page
-        el = driver.find_element_by_name("password")
+        el = self.driver.find_element_by_name("password")
         el.send_keys("140290Rovenska1")
         el.submit()
 
         # continue page
-        el = driver.find_element_by_xpath(".//button[@type='button']")
+        el = self.driver.find_element_by_xpath(".//button[@type='button']")
         el.click()
 
         # declaration page
-        el = driver.find_element_by_xpath(".//a[@href='/declarations/my/signed']")
+        el = self.driver.find_element_by_xpath(".//a[@href='/declarations/my/signed']")
         el.click()
 
         # go to last page
-        driver.find_element_by_xpath(".//a[@href='?page_number=60']").click()
+        self.driver.find_element_by_xpath(".//a[@href='?page_number=60']").click()
 
-        try:
-            driver.find_element_by_link_text("chevron_left").click()
-
-            find_name(driver)
-            find_bday(driver)
-
-
-        except WebDriverException:
-            print("Element is not clickable")
+    def parse(self):
+        for i in range(60):
+            cp_page(self.driver)
+            try:
+                self.driver.find_element_by_link_text("chevron_left").click()
+            except WebDriverException:
+                print("Element is not clickable")
 
 
-def find_name(driver):
+#################################################################
+def update_names(driver):
     names = driver.find_elements_by_xpath(".//div[@class='declaration-td name']")
 
     names.reverse()
-    names = [i.text for i in names]
-    print(*names[:len(names) - 1])
+    names = names[:len(names) - 1]
+    names = [i for i in names]
 
-def find_bday(driver):
+    return names
+
+
+def cp_page(driver):
+
+
     dates = driver.find_elements_by_xpath(".//div[@class='declaration-td birthday-date']")
-
     dates.reverse()
     dates = [i.text for i in dates]
-    print(*dates[:len(dates)])
+    dates = dates[:len(dates)]
+
+    for i in range(20):
+        names = update_names(driver)
+
+        person = [""] * 6
+        person[0] = i
+        person[1] = names[i].text
+
+        person[2] = dates[i]
+
+        names[i].click()
+
+        #Yep, it`s stupid, but otherwise the db of MoH is breaking down
+        time.sleep(5)
+
+        person[3] = driver.find_elements_by_xpath(".//input[@id='person.gender']")[0].get_attribute("value")
+        person[4] = driver.find_element_by_id("person.phones.0.number").get_attribute("value")
+        person[5] = driver.find_element_by_id("person.addresses.0.street").get_attribute("value") + ' ' \
+                    + driver.find_element_by_id("person.addresses.0.building").get_attribute("value") + '-' \
+                    + driver.find_element_by_id("person.addresses.0.apartment").get_attribute("value")
+
+        print(*person)
+        driver.back()
+    print("#######################")
+
+
+# def find_bday(driver):
+#     dates = driver.find_elements_by_xpath(".//div[@class='declaration-td birthday-date']")
+#
+#     dates.reverse()
+#     dates = [i.text for i in dates]
+#     dates = dates[:len(dates)]
+#
+#     return dates
+
 
 def excel_operations():
     wb = workbook.Workbook()
     ws = wb.active
 
 
+def cp_single_person(driver):
+    pass
+
+
 if __name__ == "__main__":
     parser = HelsiParser(webdriver.Chrome())
 
     parser.to_declarations()
+    parser.parse()
 
-    # elements = ["Petya", "Masha", "Kolya", "Nadya"]
-    # elements.reverse()
-    # for el in elements:
-    #     if elements.index(el) < 3:
-    #         print(el)
-
-    #excel_operations()
+# excel_operations()
