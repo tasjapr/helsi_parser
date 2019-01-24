@@ -14,7 +14,6 @@ class HelsiParser:
 
     def __init__(self, driver):
         self.driver = driver
-        self.last_time = ''
 
     def get_page(self):
         try:
@@ -29,9 +28,8 @@ class HelsiParser:
 
         self.driver.implicitly_wait(10)
 
-        self.driver.get("https://reform.helsi.me/")
-
         # main page
+        self.driver.get("https://reform.helsi.me/")
         self.driver.find_element_by_xpath(".//a[@href='#login-modal']").click()
         self.driver.find_element_by_xpath(".//input[@id='user.email']").send_keys("rovenska10@bigmir.net",
                                                                                   Keys.ENTER)
@@ -52,15 +50,16 @@ class HelsiParser:
         self.driver.find_element_by_xpath(".//a[@href='?page_number=60']").click()
 
     def parse(self):
+        wb = workbook.Workbook()
+        ws = wb.active
         for i in range(60):
-            cp_page(self.driver)
+            cp_page(self.driver, ws, wb)
             try:
                 self.driver.find_element_by_link_text("chevron_left").click()
             except WebDriverException:
                 print("Element is not clickable")
 
 
-#################################################################
 def update_names(driver):
     names = driver.find_elements_by_xpath(".//div[@class='declaration-td name']")
 
@@ -71,10 +70,7 @@ def update_names(driver):
     return names
 
 
-def cp_page(driver):
-    wb = workbook.Workbook()
-    ws = wb.active
-
+def cp_page(driver, ws, wb):
     dates = driver.find_elements_by_xpath(".//div[@class='declaration-td birthday-date']")
     dates.reverse()
     dates = [i.text for i in dates]
@@ -87,7 +83,6 @@ def cp_page(driver):
         person[0] = names[i].text
         person[2] = dates[i]
 
-        # Don't change this line!
         driver.find_element_by_partial_link_text(names[i].text).click()
 
         # Yep, it`s stupid, but otherwise the db of MoH is breaking down
@@ -104,9 +99,11 @@ def cp_page(driver):
                         + driver.find_element_by_id("person.addresses.0.building").get_attribute("value") + '-' \
                         + driver.find_element_by_id("person.addresses.0.apartment").get_attribute("value")
 
-        print(*person)
+
         ws.append(person)
+        # enter your name for doc here
         wb.save('decl.xlsx')
+        print(*person)
 
         driver.back()
     print("#######################")
